@@ -24,13 +24,15 @@ QBCore.Functions.CreateCallback("flex-ownedshop:server:isowner", function(source
     local Player = QBCore.Functions.GetPlayer(src)
     local result = MySQL.Sync.fetchAll('SELECT owner FROM ownedshops WHERE shopname = ?', { shop })
     if result[1] then
-        if json.encode(result[1].owner) == Player.PlayerData.citizenid then
-            cb(true)
+        if result[1].owner == Player.PlayerData.citizenid then
+            cb(2)
+        elseif result[1].owner ~= nil then
+            cb(1)
         else
-            cb(false)
+            cb(0)
         end
     else
-        cb(false)
+        cb(0)
     end
 end)
 
@@ -41,10 +43,10 @@ RegisterNetEvent('flex-ownedshops:server:buyshop', function(data)
     local CashMoneyMoney = Player.PlayerData.money['cash']
     if src == nil or Player == nil then return end
     local HasMoney = false
-    if BankMoney >= price and not HasMoney then
+    if BankMoney >= data.shopprice and not HasMoney then
         HasMoney = true
         Player.Functions.RemoveMoney("bank", data.shopprice, data.shopname)
-    elseif CashMoneyMoney >= price and not HasMoney then
+    elseif CashMoneyMoney >= data.shopprice and not HasMoney then
         HasMoney = true
         Player.Functions.RemoveMoney("cash", data.shopprice, data.shopname)
     end
@@ -115,7 +117,12 @@ RegisterNetEvent('flex-ownedshops:server:restock', function(itemname, amount, sh
             }
         end
         alreadyadded = false
-        MySQL.Async.insert('INSERT INTO ownedshops (shopname, stock) VALUES (:shopname, :stock) ON DUPLICATE KEY UPDATE stock = :stock', { ['shopname'] = shopname, ['stock'] = json.encode(NewStock) })
+        local owner = MySQL.prepare.await('SELECT owner FROM ownedshops WHERE shopname = ?', { shopname })
+        if not owner then
+            MySQL.Async.insert('INSERT INTO ownedshops (shopname, stock) VALUES (:shopname, :stock) ON DUPLICATE KEY UPDATE stock = :stock', { ['shopname'] = shopname, ['stock'] = json.encode(NewStock) })
+        else
+            MySQL.update.await("UPDATE ownedshops SET stock=? WHERE shopname=?", {json.encode(NewStock), shopname})
+        end
         TriggerClientEvent('QBCore:Notify', src, Lang:t("success.stockrefilled"), 'success', 5000)
     else
         TriggerClientEvent('QBCore:Notify', src, Lang:t("error.error404item"), 'error', 5000)
@@ -130,8 +137,8 @@ RegisterNetEvent('flex-ownedshops:server:buy', function(itemname, itemamount, pr
     local shop = MySQL.prepare.await('SELECT stock FROM ownedshops WHERE shopname = ?', { shopname })
     local owner = MySQL.prepare.await('SELECT owner FROM ownedshops WHERE shopname = ?', { shopname })
     local target = nil
-    if owner[1] then
-        Target = QBCore.Functions.GetPlayerByCitizenId(owner[1])
+    if owner then
+        Target = QBCore.Functions.GetPlayerByCitizenId(owner)
     end
     local NewStock = {}
     local HasMoney = false
@@ -193,7 +200,7 @@ RegisterNetEvent('flex-ownedshops:server:buy', function(itemname, itemamount, pr
             TriggerClientEvent('QBCore:Notify', src, Lang:t("error.error404item"), 'error', 5000)
         end
         if canbuy then
-            MySQL.Async.insert('INSERT INTO ownedshops (shopname, stock) VALUES (:shopname, :stock) ON DUPLICATE KEY UPDATE stock = :stock', { ['shopname'] = shopname, ['stock'] = json.encode(NewStock) })
+            MySQL.update.await("UPDATE ownedshops SET stock=? WHERE shopname=?", {json.encode(NewStock), shopname})
             if Player.Functions.AddItem(itemname, itemamount) then
                 TriggerClientEvent('inventory:client:ItemBox', src, QBCore.Shared.Items[itemname], "add", itemamount)
                 canbuy = false
@@ -236,7 +243,7 @@ RegisterNetEvent('flex-ownedshops:server:setprice', function(itemname, price, sh
     else
         TriggerClientEvent('QBCore:Notify', src, Lang:t("error.error404item"), 'error', 5000)
     end
-    MySQL.Async.insert('INSERT INTO ownedshops (shopname, stock) VALUES (:shopname, :stock) ON DUPLICATE KEY UPDATE stock = :stock', { ['shopname'] = shopname, ['stock'] = json.encode(NewStock) })
+    MySQL.update.await("UPDATE ownedshops SET stock=? WHERE shopname=?", {json.encode(NewStock), shopname})
 end)
 
 RegisterNetEvent('flex-ownedshops:server:changeDuty', function(duty)

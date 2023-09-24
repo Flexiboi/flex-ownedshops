@@ -20,6 +20,9 @@ RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function()
     PlayerGang = QBCore.Functions.GetPlayerData().gang
     PlayerJob = QBCore.Functions.GetPlayerData().job
     onDuty = PlayerJob.onduty
+    SetTimeout(3000, function()
+        InitiateZones()
+    end)
 end)
 
 RegisterNetEvent('QBCore:Client:OnJobUpdate', function(JobInfo)
@@ -52,7 +55,7 @@ function InitiateZones()
                             local pos = GetEntityCoords(ped)
                             if IsControlJustReleased(0, 38) then
                                 QBCore.Functions.TriggerCallback('flex-ownedshop:server:isowner', function(owner)
-                                    if owner or (v.isjob.name ~= false and PlayerJob.name == v.isjob.name and v.isjob.everyone) 
+                                    if (owner == 2) or (v.isjob.name ~= false and PlayerJob.name == v.isjob.name and v.isjob.everyone) 
                                     or (v.isjob.name ~= false and PlayerJob.name == v.isjob.name and PlayerJob.isboss) 
                                     or (v.isgang.name ~= false and PlayerGang.name == v.isgang.name and not v.isgang.everyone and PlayerGang.isboss) 
                                     or (v.isgang.name ~= false and PlayerGang.name == v.isgang.name and v.isgang.everyone) then
@@ -93,7 +96,8 @@ function InitiateZones()
                             exports['qb-core']:KeyPressed()
                             exports['qb-core']:HideText()
                             QBCore.Functions.TriggerCallback('flex-ownedshop:server:isowner', function(owner)
-                                if owner or (v.isjob.name ~= false and PlayerJob.name == v.isjob.name and v.isjob.everyone) 
+                                print(owner)
+                                if (owner == 2) or (v.isjob.name ~= false and PlayerJob.name == v.isjob.name and v.isjob.everyone) 
                                 or (v.isjob.name ~= false and PlayerJob.name == v.isjob.name and PlayerJob.isboss) 
                                 or (v.isgang.name ~= false and PlayerGang.name == v.isgang.name and not v.isgang.everyone and PlayerGang.isboss) 
                                 or (v.isgang.name ~= false and PlayerGang.name == v.isgang.name and v.isgang.everyone) then
@@ -110,7 +114,8 @@ function InitiateZones()
                                     else
                                         QBCore.Functions.Notify(Lang:t("error.notonduty"), "error", 4500)
                                     end
-                                elseif not owner and v.isjob.name == false and v.isgang.name == false then
+                                elseif (owner == 0) and v.isjob.name == false and v.isgang.name == false then
+                                    print(v.shopprice)
                                     TriggerEvent('flex-ownedshops:client:buyshop', v.shopname, v.shopprice)
                                 else
                                     QBCore.Functions.Notify(Lang:t("error.notworkinghere"), "error", 4500)
