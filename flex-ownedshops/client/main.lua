@@ -38,14 +38,14 @@ function InitiateZones()
     for k, v in pairs(Config.Shops) do
         if v.isjob.name ~= false and v.isjob.dutyloc ~= nil then
             local dloc = vec3(v.isjob.dutyloc.x, v.isjob.dutyloc.y, v.isjob.dutyloc.z)
-            DutyZones[#DutyZones+k] = BoxZone:Create(dloc, 1.0, 1.0, {
+            DutyZones[#DutyZones..k] = BoxZone:Create(dloc, 1.0, 1.0, {
                 name = v.shopname..k..'dutyloc',
                 useZ = true,
                 heading = v.isjob.dutyloc.w,
                 debugPoly = Config.Debug
             })
         
-            DutyZones[#DutyZones]:onPlayerInOut(function(isPointInside, point)
+            DutyZones[#DutyZones..k]:onPlayerInOut(function(isPointInside, point)
                 isInEnterZone = isPointInside
                 if isPointInside then
                     exports['qb-core']:DrawText('[E] - '..Lang:t("info.dutychange"), 'left')
@@ -77,14 +77,14 @@ function InitiateZones()
         end
 
         local mloc = vec3(v.manageloc.x, v.manageloc.y, v.manageloc.z)
-        ShopZones[#ShopZones+k] = BoxZone:Create(mloc, v.boxzone.depth, v.boxzone.width, {
+        ShopZones[#ShopZones..k] = BoxZone:Create(mloc, v.boxzone.depth, v.boxzone.width, {
             name = v.shopname..k..'manageloc',
             useZ = true,
             heading = v.manageloc.w,
             debugPoly = Config.Debug
         })
     
-        ShopZones[#ShopZones]:onPlayerInOut(function(isPointInside, point)
+        ShopZones[#ShopZones..k]:onPlayerInOut(function(isPointInside, point)
             isInEnterZone = isPointInside
             if isPointInside then
                 exports['qb-core']:DrawText('[E] - '..Lang:t("info.manageshop"), 'left')
@@ -138,7 +138,7 @@ function InitiateZones()
 
         if v.target then
             local v3 = vec3(v.buyloc.x, v.buyloc.y, v.buyloc.z)
-            TargetZones[#TargetZones+k] = exports['qb-target']:AddBoxZone(v.shopname..k..'buyloc', v3, v.boxzone.depth, v.boxzone.width, {
+            TargetZones[#TargetZones..k] = exports['qb-target']:AddBoxZone(v.shopname..k..'buyloc', v3, v.boxzone.depth, v.boxzone.width, {
                 name = v.shopname..k..'buyloc',
                 heading = v.buyloc.w,
                 debugPoly = Config.Debug,
@@ -159,14 +159,14 @@ function InitiateZones()
             })
         else
             local v3 = vec3(v.buyloc.x, v.buyloc.y, v.buyloc.z)
-            ShopZones[#ShopZones+1] = BoxZone:Create(v3, v.boxzone.depth, v.boxzone.width, {
+            ShopZones[#ShopZones..k] = BoxZone:Create(v3, v.boxzone.depth, v.boxzone.width, {
                 name = v.shopname..k..'buyloc',
                 useZ = true,
                 heading = v.buyloc.w,
                 debugPoly = Config.Debug
             })
         
-            ShopZones[#ShopZones]:onPlayerInOut(function(isPointInside, point)
+            ShopZones[#ShopZones..k]:onPlayerInOut(function(isPointInside, point)
                 isInEnterZone = isPointInside
                 if isPointInside then
                     exports['qb-core']:DrawText('[E] - '..Lang:t("info.openshop"), 'left')
