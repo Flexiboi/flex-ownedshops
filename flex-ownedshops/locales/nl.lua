@@ -8,6 +8,7 @@ local Translations = {
         notboss = 'Je bent de baas niet..',
         nonegativeprice = 'Je prijs mag niet onder de 0 zijn..',
         broke = 'Je hebt niet geneog geld..',
+        buycantbezero = 'Je kan niet niets kopen..',
     },
     success = {
         refillstock = 'Je vulde je stock aan met %{value} x %{value2}',

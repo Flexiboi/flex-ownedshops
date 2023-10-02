@@ -8,6 +8,7 @@ local Translations = {
         notboss = 'You are not the boss here..',
         nonegativeprice = 'The price cant be lower than 0..',
         broke = 'You dont have enough money..',
+        buycantbezero = 'You cant buy 0..',
     },
     success = {
         refillstock = 'You added %{value} x %{value2} to the stock',

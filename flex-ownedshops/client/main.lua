@@ -434,7 +434,11 @@ RegisterNetEvent('flex-ownedshops:client:buy', function(data)
     })
     if buying then
         if tonumber(data.amount) >= tonumber(buying.amount) then
-            TriggerServerEvent('flex-ownedshops:server:buy', data.item, buying.amount, data.price, data.label, data.shopname, data.jobname, data.gangname)
+            if tonumber(buying.amount) > 0 then
+                TriggerServerEvent('flex-ownedshops:server:buy', data.item, buying.amount, data.price, data.label, data.shopname, data.jobname, data.gangname)
+            else
+                QBCore.Functions.Notify(Lang:t("error.buycantbezero"), "error", 4500)
+            end
         else
             QBCore.Functions.Notify(Lang:t("error.notenooughstock"), "error", 4500)
         end
