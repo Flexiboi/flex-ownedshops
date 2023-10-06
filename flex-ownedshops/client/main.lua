@@ -44,7 +44,7 @@ function InitiateZones()
                 heading = v.isjob.dutyloc.w,
                 debugPoly = Config.Debug
             })
-        
+
             DutyZones[#DutyZones..k]:onPlayerInOut(function(isPointInside, point)
                 isInEnterZone = isPointInside
                 if isPointInside then
@@ -55,9 +55,9 @@ function InitiateZones()
                             local pos = GetEntityCoords(ped)
                             if IsControlJustReleased(0, 38) then
                                 QBCore.Functions.TriggerCallback('flex-ownedshop:server:isowner', function(owner)
-                                    if (owner == 2) or (v.isjob.name ~= false and PlayerJob.name == v.isjob.name and v.isjob.everyone) 
-                                    or (v.isjob.name ~= false and PlayerJob.name == v.isjob.name and PlayerJob.isboss) 
-                                    or (v.isgang.name ~= false and PlayerGang.name == v.isgang.name and not v.isgang.everyone and PlayerGang.isboss) 
+                                    if (owner == 2) or (v.isjob.name ~= false and PlayerJob.name == v.isjob.name and v.isjob.everyone)
+                                    or (v.isjob.name ~= false and PlayerJob.name == v.isjob.name and PlayerJob.isboss)
+                                    or (v.isgang.name ~= false and PlayerGang.name == v.isgang.name and not v.isgang.everyone and PlayerGang.isboss)
                                     or (v.isgang.name ~= false and PlayerGang.name == v.isgang.name and v.isgang.everyone) then
                                         exports['qb-core']:KeyPressed()
                                         exports['qb-core']:HideText()
@@ -83,7 +83,7 @@ function InitiateZones()
             heading = v.manageloc.w,
             debugPoly = Config.Debug
         })
-    
+
         ShopZones[#ShopZones..k]:onPlayerInOut(function(isPointInside, point)
             isInEnterZone = isPointInside
             if isPointInside then
@@ -97,9 +97,9 @@ function InitiateZones()
                             exports['qb-core']:HideText()
                             QBCore.Functions.TriggerCallback('flex-ownedshop:server:isowner', function(owner)
                                 print(owner)
-                                if (owner == 2) or (v.isjob.name ~= false and PlayerJob.name == v.isjob.name and v.isjob.everyone) 
-                                or (v.isjob.name ~= false and PlayerJob.name == v.isjob.name and PlayerJob.isboss) 
-                                or (v.isgang.name ~= false and PlayerGang.name == v.isgang.name and not v.isgang.everyone and PlayerGang.isboss) 
+                                if (owner == 2) or (v.isjob.name ~= false and PlayerJob.name == v.isjob.name and v.isjob.everyone)
+                                or (v.isjob.name ~= false and PlayerJob.name == v.isjob.name and PlayerJob.isboss)
+                                or (v.isgang.name ~= false and PlayerGang.name == v.isgang.name and not v.isgang.everyone and PlayerGang.isboss)
                                 or (v.isgang.name ~= false and PlayerGang.name == v.isgang.name and v.isgang.everyone) then
                                     if onDuty or v.isgang.name ~= false or owner then
                                         if v.isjob.everyone or v.isgang.everyone or owner then
@@ -165,7 +165,7 @@ function InitiateZones()
                 heading = v.buyloc.w,
                 debugPoly = Config.Debug
             })
-        
+
             ShopZones[#ShopZones..k]:onPlayerInOut(function(isPointInside, point)
                 isInEnterZone = isPointInside
                 if isPointInside then
@@ -193,7 +193,7 @@ end
 RegisterNetEvent('flex-ownedshops:client:buyshop', function(shopid, price)
     local BuyShop = {
         {
-            header = Lang:t("managemenu.buyheader"),
+            header = Lang:t("managemenu.buyshopheader"),
             icon = "fa-solid fa-circle-info",
             isMenuHeader = true,
         },

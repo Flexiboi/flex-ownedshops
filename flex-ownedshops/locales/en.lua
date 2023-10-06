@@ -26,7 +26,7 @@ local Translations = {
         emptyshop = 'This shop is empty..',
     },
     managemenu = {
-        buyheader = 'You sure you want to buy this?',
+        buyshopheader = 'You sure you want to buy this?',
         buyshop = 'Buy shop for $%{value}',
         header = 'Manage Shop',
         checkstock = 'Manage Stock </br> View / Change your stock',
