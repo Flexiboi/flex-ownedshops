@@ -45,14 +45,12 @@ function InitiateZones()
                 debugPoly = Config.Debug
             })
 
-            DutyZones[#DutyZones..k]:onPlayerInOut(function(isPointInside, point)
+            DutyZones[#DutyZones..k]:onPlayerInOut(function(isPointInside)
                 isInEnterZone = isPointInside
                 if isPointInside then
                     exports['qb-core']:DrawText('[E] - '..Lang:t("info.dutychange"), 'left')
                     CreateThread(function()
                         while isInEnterZone do
-                            local ped = PlayerPedId()
-                            local pos = GetEntityCoords(ped)
                             if IsControlJustReleased(0, 38) then
                                 QBCore.Functions.TriggerCallback('flex-ownedshop:server:isowner', function(owner)
                                     if (owner == 2) or (v.isjob.name ~= false and PlayerJob.name == v.isjob.name and v.isjob.everyone)
@@ -84,14 +82,12 @@ function InitiateZones()
             debugPoly = Config.Debug
         })
 
-        ShopZones[#ShopZones..k]:onPlayerInOut(function(isPointInside, point)
+        ShopZones[#ShopZones..k]:onPlayerInOut(function(isPointInside)
             isInEnterZone = isPointInside
             if isPointInside then
                 exports['qb-core']:DrawText('[E] - '..Lang:t("info.manageshop"), 'left')
                 CreateThread(function()
                     while isInEnterZone do
-                        local ped = PlayerPedId()
-                        local pos = GetEntityCoords(ped)
                         if IsControlJustReleased(0, 38) then
                             exports['qb-core']:KeyPressed()
                             exports['qb-core']:HideText()
@@ -172,8 +168,6 @@ function InitiateZones()
                     exports['qb-core']:DrawText('[E] - '..Lang:t("info.openshop"), 'left')
                     CreateThread(function()
                         while isInEnterZone do
-                            local ped = PlayerPedId()
-                            local pos = GetEntityCoords(ped)
                             if IsControlJustReleased(0, 38) then
                                 exports['qb-core']:KeyPressed()
                                 exports['qb-core']:HideText()
@@ -268,7 +262,7 @@ RegisterNetEvent('flex-ownedshops:client:checkstock', function(data)
                 },
             }
             local itemlist = {}
-            for k, v in pairs(json.decode(items)) do
+            for _, v in pairs(json.decode(items)) do
                 if itemlist[v['name']] then
                     itemlist[v['name']].amount = itemlist[v['name']].amount + tonumber(v['amount'])
                 else
@@ -383,7 +377,7 @@ function OpenShop(shopid, job, gang)
                 },
             }
             local itemlist = {}
-            for k, v in pairs(json.decode(items)) do
+            for _, v in pairs(json.decode(items)) do
                 if itemlist[v['name']] then
                     itemlist[v['name']].amount = itemlist[v['name']].amount + tonumber(v['amount'])
                 else
@@ -470,8 +464,8 @@ RegisterNetEvent('flex-ownedshops:client:setprice', function(data)
 end)
 
 AddEventHandler('onResourceStop', function(resource) if resource ~= GetCurrentResourceName() then return end
-    for k, v in pairs(ShopZones) do ShopZones[k]:destroy() end
-    for k, v in pairs(DutyZones) do DutyZones[k]:destroy() end
-    for k, v in pairs(Machines) do DeleteEntity(Machines[k]) end
+    for k in pairs(ShopZones) do ShopZones[k]:destroy() end
+    for k in pairs(DutyZones) do DutyZones[k]:destroy() end
+    for k in pairs(Machines) do DeleteEntity(Machines[k]) end
     for t in pairs(TargetZones) do exports['qb-target']:RemoveZone(t) end
 end)
