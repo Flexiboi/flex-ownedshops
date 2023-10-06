@@ -44,20 +44,18 @@ function InitiateZones()
                 heading = v.isjob.dutyloc.w,
                 debugPoly = Config.Debug
             })
-        
-            DutyZones[#DutyZones..k]:onPlayerInOut(function(isPointInside, point)
+
+            DutyZones[#DutyZones..k]:onPlayerInOut(function(isPointInside)
                 isInEnterZone = isPointInside
                 if isPointInside then
                     exports['qb-core']:DrawText('[E] - '..Lang:t("info.dutychange"), 'left')
                     CreateThread(function()
                         while isInEnterZone do
-                            local ped = PlayerPedId()
-                            local pos = GetEntityCoords(ped)
                             if IsControlJustReleased(0, 38) then
                                 QBCore.Functions.TriggerCallback('flex-ownedshop:server:isowner', function(owner)
-                                    if (owner == 2) or (v.isjob.name ~= false and PlayerJob.name == v.isjob.name and v.isjob.everyone) 
-                                    or (v.isjob.name ~= false and PlayerJob.name == v.isjob.name and PlayerJob.isboss) 
-                                    or (v.isgang.name ~= false and PlayerGang.name == v.isgang.name and not v.isgang.everyone and PlayerGang.isboss) 
+                                    if (owner == 2) or (v.isjob.name ~= false and PlayerJob.name == v.isjob.name and v.isjob.everyone)
+                                    or (v.isjob.name ~= false and PlayerJob.name == v.isjob.name and PlayerJob.isboss)
+                                    or (v.isgang.name ~= false and PlayerGang.name == v.isgang.name and not v.isgang.everyone and PlayerGang.isboss)
                                     or (v.isgang.name ~= false and PlayerGang.name == v.isgang.name and v.isgang.everyone) then
                                         exports['qb-core']:KeyPressed()
                                         exports['qb-core']:HideText()
@@ -83,23 +81,21 @@ function InitiateZones()
             heading = v.manageloc.w,
             debugPoly = Config.Debug
         })
-    
-        ShopZones[#ShopZones..k]:onPlayerInOut(function(isPointInside, point)
+
+        ShopZones[#ShopZones..k]:onPlayerInOut(function(isPointInside)
             isInEnterZone = isPointInside
             if isPointInside then
                 exports['qb-core']:DrawText('[E] - '..Lang:t("info.manageshop"), 'left')
                 CreateThread(function()
                     while isInEnterZone do
-                        local ped = PlayerPedId()
-                        local pos = GetEntityCoords(ped)
                         if IsControlJustReleased(0, 38) then
                             exports['qb-core']:KeyPressed()
                             exports['qb-core']:HideText()
                             QBCore.Functions.TriggerCallback('flex-ownedshop:server:isowner', function(owner)
                                 print(owner)
-                                if (owner == 2) or (v.isjob.name ~= false and PlayerJob.name == v.isjob.name and v.isjob.everyone) 
-                                or (v.isjob.name ~= false and PlayerJob.name == v.isjob.name and PlayerJob.isboss) 
-                                or (v.isgang.name ~= false and PlayerGang.name == v.isgang.name and not v.isgang.everyone and PlayerGang.isboss) 
+                                if (owner == 2) or (v.isjob.name ~= false and PlayerJob.name == v.isjob.name and v.isjob.everyone)
+                                or (v.isjob.name ~= false and PlayerJob.name == v.isjob.name and PlayerJob.isboss)
+                                or (v.isgang.name ~= false and PlayerGang.name == v.isgang.name and not v.isgang.everyone and PlayerGang.isboss)
                                 or (v.isgang.name ~= false and PlayerGang.name == v.isgang.name and v.isgang.everyone) then
                                     if onDuty or v.isgang.name ~= false or owner then
                                         if v.isjob.everyone or v.isgang.everyone or owner then
@@ -165,15 +161,13 @@ function InitiateZones()
                 heading = v.buyloc.w,
                 debugPoly = Config.Debug
             })
-        
+
             ShopZones[#ShopZones..k]:onPlayerInOut(function(isPointInside, point)
                 isInEnterZone = isPointInside
                 if isPointInside then
                     exports['qb-core']:DrawText('[E] - '..Lang:t("info.openshop"), 'left')
                     CreateThread(function()
                         while isInEnterZone do
-                            local ped = PlayerPedId()
-                            local pos = GetEntityCoords(ped)
                             if IsControlJustReleased(0, 38) then
                                 exports['qb-core']:KeyPressed()
                                 exports['qb-core']:HideText()
@@ -193,7 +187,7 @@ end
 RegisterNetEvent('flex-ownedshops:client:buyshop', function(shopid, price)
     local BuyShop = {
         {
-            header = Lang:t("managemenu.buyheader"),
+            header = Lang:t("managemenu.buyshopheader"),
             icon = "fa-solid fa-circle-info",
             isMenuHeader = true,
         },
@@ -268,7 +262,7 @@ RegisterNetEvent('flex-ownedshops:client:checkstock', function(data)
                 },
             }
             local itemlist = {}
-            for k, v in pairs(json.decode(items)) do
+            for _, v in pairs(json.decode(items)) do
                 if itemlist[v['name']] then
                     itemlist[v['name']].amount = itemlist[v['name']].amount + tonumber(v['amount'])
                 else
@@ -383,7 +377,7 @@ function OpenShop(shopid, job, gang)
                 },
             }
             local itemlist = {}
-            for k, v in pairs(json.decode(items)) do
+            for _, v in pairs(json.decode(items)) do
                 if itemlist[v['name']] then
                     itemlist[v['name']].amount = itemlist[v['name']].amount + tonumber(v['amount'])
                 else
@@ -470,8 +464,8 @@ RegisterNetEvent('flex-ownedshops:client:setprice', function(data)
 end)
 
 AddEventHandler('onResourceStop', function(resource) if resource ~= GetCurrentResourceName() then return end
-    for k, v in pairs(ShopZones) do ShopZones[k]:destroy() end
-    for k, v in pairs(DutyZones) do DutyZones[k]:destroy() end
-    for k, v in pairs(Machines) do DeleteEntity(Machines[k]) end
+    for k in pairs(ShopZones) do ShopZones[k]:destroy() end
+    for k in pairs(DutyZones) do DutyZones[k]:destroy() end
+    for k in pairs(Machines) do DeleteEntity(Machines[k]) end
     for t in pairs(TargetZones) do exports['qb-target']:RemoveZone(t) end
 end)

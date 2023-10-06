@@ -26,7 +26,7 @@ local Translations = {
         emptyshop = 'Deze winkel is leeg..',
     },
     managemenu = {
-        buyheader = 'Zeker dat je dit wil kopen?',
+        buyshopheader = 'Zeker dat je dit wil kopen?',
         buyshop = 'Koop winkel voor €%{value}',
         header = 'Winkel beheren',
         checkstock = 'Beheer stock </br> Bekijk en pas je stock aan',
@@ -49,7 +49,10 @@ local Translations = {
     }
 }
 
-Lang = Locale:new({
-    phrases = Translations,
-    warnOnMissing = true
-})
+if GetConvar('qb_locale', 'en') == 'nl' then
+    Lang = Locale:new({
+        phrases = Translations,
+        warnOnMissing = true,
+        fallbackLang = Lang,
+    })
+end
