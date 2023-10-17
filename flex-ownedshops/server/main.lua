@@ -143,32 +143,32 @@ RegisterNetEvent('flex-ownedshops:server:buy', function(itemname, itemamount, pr
     local NewStock = {}
     local HasMoney = false
     local canbuy = false
-    if BankMoney >= price and not HasMoney then
+    if BankMoney >= price*itemamount and not HasMoney then
         HasMoney = true
-        Player.Functions.RemoveMoney("bank", price, itemname)
-    elseif CashMoneyMoney >= price and not HasMoney then
+        Player.Functions.RemoveMoney("bank", price*itemamount, itemname)
+    elseif CashMoneyMoney >= price*itemamount and not HasMoney then
         HasMoney = true
-        Player.Functions.RemoveMoney("cash", price, itemname)
+        Player.Functions.RemoveMoney("cash", price*itemamount, itemname)
     end
     if HasMoney then
         if Config.Banking == 'fd' then
             if jobname then
-                exports.fd_banking:AddMoney(jobname, price, itemname)
+                exports.fd_banking:AddMoney(jobname, price*itemamount, itemname)
             elseif gangname then
-                exports.fd_banking:AddMoney(gangname, price, itemname)
+                exports.fd_banking:AddMoney(gangname, price*itemamount, itemname)
             else
-                Target.Functions.AddMoney("bank", price, itemname)
+                Target.Functions.AddMoney("bank", price*itemamount, itemname)
             end
         elseif Config.Banking == 'qb' then
             if jobname then
-                exports['qb-management']:AddMoney(jobname, price)
+                exports['qb-management']:AddMoney(jobname, price*itemamount)
             elseif gangname then
-                exports['qb-management']:AddMoney(gangname, price)
+                exports['qb-management']:AddMoney(gangname, price*itemamount)
             else
-                Target.Functions.AddMoney("bank", price, itemname)
+                Target.Functions.AddMoney("bank", price*itemamount, itemname)
             end
         else
-            Target.Functions.AddMoney("bank", price, itemname)
+            Target.Functions.AddMoney("bank", price*itemamount, itemname)
         end
         if table.type(inventory) ~= "empty" and shop then
             local items = json.decode(shop)
