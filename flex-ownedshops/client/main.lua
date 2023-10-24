@@ -3,6 +3,7 @@ local ShopZones = {}
 local TargetZones = {}
 local DutyZones = {}
 local Machines = {}
+local Peds = {}
 local PlayerJob = {}
 local PlayerGang = {}
 local onDuty = false
@@ -132,14 +133,24 @@ function InitiateZones()
             SetEntityHeading(Machines[k], v.buyloc.w)
         end
 
+        if v.ped.model ~= nil then
+            local model = GetHashKey(v.ped.model)
+            while not HasModelLoaded(model) do RequestModel(model) Wait(0); end
+            Peds[k] = CreatePed(0, model, v.buyloc.x, v.buyloc.y, v.buyloc.z-1, v.buyloc.w, false, false)
+            TaskStartScenarioInPlace(Peds[k], v.ped.scenario, 0, true)
+            FreezeEntityPosition(Peds[k], true)
+            SetEntityInvincible(Peds[k], true)
+            SetEntityCollision(Peds[k], false, true)
+            SetBlockingOfNonTemporaryEvents(Peds[k], true)
+        end
         if v.target then
             local v3 = vec3(v.buyloc.x, v.buyloc.y, v.buyloc.z)
-            TargetZones[#TargetZones..k] = exports['qb-target']:AddBoxZone(v.shopname..k..'buyloc', v3, v.boxzone.depth, v.boxzone.width, {
+            TargetZones[v.shopname..k..'buyloc'] = exports['qb-target']:AddBoxZone(v.shopname..k..'buyloc', v3, v.boxzone.depth, v.boxzone.width, {
                 name = v.shopname..k..'buyloc',
                 heading = v.buyloc.w,
                 debugPoly = Config.Debug,
-                minZ = v.boxzone.minZ,
-                maxZ = v.boxzone.maxZ,
+                minZ = v3.z - v.boxzone.minZ,
+                maxZ = v3.z + v.boxzone.maxZ,
             }, {
                 options = {
                     {
@@ -468,4 +479,5 @@ AddEventHandler('onResourceStop', function(resource) if resource ~= GetCurrentRe
     for k in pairs(DutyZones) do DutyZones[k]:destroy() end
     for k in pairs(Machines) do DeleteEntity(Machines[k]) end
     for t in pairs(TargetZones) do exports['qb-target']:RemoveZone(t) end
+    for k, v in pairs(Peds) do DeleteEntity(v) end
 end)
