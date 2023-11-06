@@ -75,21 +75,21 @@ RegisterNetEvent('flex-ownedshops:server:restock', function(itemname, amount, sh
                             NewStock[#NewStock+1] = {
                                 name = itemname,
                                 amount = tonumber(item.amount) + amount,
-                                price = 0,
+                                price = item.price or 0,
                             }
                             alreadyadded = true
                         else
                             NewStock[#NewStock+1] = {
                                 name = item.name or itemname,
                                 amount = tonumber(item.amount) or amount,
-                                price = 0,
+                                price = item.price or 0,
                             }
                             if #items == slot then
                                 if not alreadyadded then
                                     NewStock[#NewStock+1] = {
                                         name = itemname,
                                         amount = amount,
-                                        price = 0,
+                                        price = item.price or 0,
                                     }
                                 end
                             end
@@ -98,7 +98,7 @@ RegisterNetEvent('flex-ownedshops:server:restock', function(itemname, amount, sh
                         NewStock[#NewStock+1] = {
                             name = itemname,
                             amount = amount,
-                            price = 0,
+                            price = item.price or 0,
                         }
                     end
                 end
@@ -106,7 +106,7 @@ RegisterNetEvent('flex-ownedshops:server:restock', function(itemname, amount, sh
                 NewStock[#NewStock+1] = {
                     name = itemname,
                     amount = amount,
-                    price = 0,
+                    price = item.price or 0,
                 }
             end
         else
