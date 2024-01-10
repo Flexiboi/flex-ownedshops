@@ -200,7 +200,11 @@ RegisterNetEvent('flex-ownedshops:server:buy', function(itemname, itemamount, pr
             TriggerClientEvent('QBCore:Notify', src, Lang:t("error.error404item"), 'error', 5000)
         end
         if canbuy then
-            MySQL.update.await("UPDATE ownedshops SET stock=? WHERE shopname=?", {json.encode(NewStock), shopname})
+            if rawequal(next(NewStock), nil) then
+               MySQL.update.await("UPDATE ownedshops SET stock=? WHERE shopname=?", {'', shopname})
+            else
+                MySQL.update.await("UPDATE ownedshops SET stock=? WHERE shopname=?", {json.encode(NewStock), shopname})
+            end
             if Player.Functions.AddItem(itemname, itemamount) then
                 TriggerClientEvent('inventory:client:ItemBox', src, QBCore.Shared.Items[itemname], "add", itemamount)
                 canbuy = false
