@@ -275,7 +275,7 @@ RegisterNetEvent('flex-ownedshops:client:checkstock', function(data)
             local itemlist = {}
             for _, v in pairs(json.decode(items)) do
                 if itemlist[v['name']] then
-                    itemlist[v['name']].amount = itemlist[v['name']].amount + tonumber(v['amount'])
+                    itemlist[v['name']].amount = itemlist[v['name']].amount --+ tonumber(v['amount'])
                 else
                     itemlist[v['name']] = {
                         amount = tonumber(v['amount']),
@@ -325,7 +325,7 @@ RegisterNetEvent('flex-ownedshops:client:checkinv', function(data)
             local itemlist = {}
             for k, v in pairs(items) do
                 if itemlist[v['name']] then
-                    itemlist[v['name']].amount = itemlist[v['name']].amount + tonumber(v['amount'])
+                    itemlist[v['name']].amount = itemlist[v['name']].amount --+ tonumber(v['amount'])
                 else
                     itemlist[v['name']] = {
                         amount = tonumber(v['amount']),
@@ -390,7 +390,7 @@ function OpenShop(shopid, job, gang)
             local itemlist = {}
             for _, v in pairs(json.decode(items)) do
                 if itemlist[v['name']] then
-                    itemlist[v['name']].amount = itemlist[v['name']].amount + tonumber(v['amount'])
+                    itemlist[v['name']].amount = itemlist[v['name']].amount --+ tonumber(v['amount'])
                 else
                     itemlist[v['name']] = {
                         amount = tonumber(v['amount']),
