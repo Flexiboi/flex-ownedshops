@@ -201,7 +201,7 @@ RegisterNetEvent('flex-ownedshops:server:buy', function(itemname, itemamount, pr
         end
         if canbuy then
             if rawequal(next(NewStock), nil) then
-               MySQL.update.await("UPDATE ownedshops SET stock=? WHERE shopname=?", {'', shopname})
+               MySQL.update.await("UPDATE ownedshops SET stock=? WHERE shopname=?", {'[{}]', shopname})
             else
                 MySQL.update.await("UPDATE ownedshops SET stock=? WHERE shopname=?", {json.encode(NewStock), shopname})
             end
