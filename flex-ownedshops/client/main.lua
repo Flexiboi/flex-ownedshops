@@ -423,7 +423,7 @@ function OpenShop(shopid, job, gang)
         end
     end, shopid)
 end
-exports('OpenOwnedShop', OpenShop)
+exports('OpenShop', OpenShop)
 
 RegisterNetEvent('flex-ownedshops:client:buy', function(data)
     local buying = exports['qb-input']:ShowInput({
