@@ -138,7 +138,7 @@ RegisterNetEvent('flex-ownedshops:server:buy', function(itemname, itemamount, pr
     local owner = MySQL.prepare.await('SELECT owner FROM ownedshops WHERE shopname = ?', { shopname })
     local target = nil
     if owner then
-        Target = QBCore.Functions.GetPlayerByCitizenId(owner)
+        Target = QBCore.Functions.GetOfflinePlayerByCitizenId(owner)
     end
     local NewStock = {}
     local HasMoney = false
