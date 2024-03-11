@@ -43,7 +43,7 @@ CREATE TABLE `ownedshops` (
 -- Indexes for table `ownedshops`
 --
 ALTER TABLE `ownedshops`
-  ADD PRIMARY KEY (`owner`),
+  ADD KEY (`owner`),
   ADD KEY `id` (`id`),
   ADD KEY `last_updated` (`last_updated`);
 

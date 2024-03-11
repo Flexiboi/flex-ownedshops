@@ -66,9 +66,10 @@ RegisterNetEvent('flex-ownedshops:server:restock', function(itemname, amount, sh
         local shop = MySQL.prepare.await('SELECT stock FROM ownedshops WHERE shopname = ?', { shopname })
         local NewStock = {}
         local alreadyadded = false
-        if table.type(inventory) ~= "empty" and shop then
+        if shop ~= nil then
+            if table.type(shop) == "empty" and not shop or shop == nil then return end
             local items = json.decode(shop)
-            if shop ~= '[]' then
+            if shop ~= '[]' or shop ~= nil then
                 for slot, item in pairs(items) do
                     if items[slot] then
                         if item.name == itemname then
@@ -117,11 +118,14 @@ RegisterNetEvent('flex-ownedshops:server:restock', function(itemname, amount, sh
             }
         end
         alreadyadded = false
-        local owner = MySQL.prepare.await('SELECT owner FROM ownedshops WHERE shopname = ?', { shopname })
-        if not owner then
-            MySQL.Async.insert('INSERT INTO ownedshops (shopname, stock) VALUES (:shopname, :stock) ON DUPLICATE KEY UPDATE stock = :stock', { ['shopname'] = shopname, ['stock'] = json.encode(NewStock) })
-        else
+        if shop ~= nil then
             MySQL.update.await("UPDATE ownedshops SET stock=? WHERE shopname=?", {json.encode(NewStock), shopname})
+        else
+            MySQL.insert('INSERT INTO ownedshops (shopname, owner, stock) VALUES (?, ?, ?)', {
+                shopname,
+                '',
+                json.encode(NewStock),
+            })
         end
         TriggerClientEvent('QBCore:Notify', src, Lang:t("success.stockrefilled"), 'success', 5000)
     else
@@ -170,7 +174,7 @@ RegisterNetEvent('flex-ownedshops:server:buy', function(itemname, itemamount, pr
         else
             Target.Functions.AddMoney("bank", price*itemamount, itemname)
         end
-        if table.type(inventory) ~= "empty" and shop then
+        if table.type(shop) ~= "empty" and shop then
             local items = json.decode(shop)
             if shop ~= '[]' then
                 for slot, item in pairs(items) do
@@ -223,7 +227,7 @@ RegisterNetEvent('flex-ownedshops:server:setprice', function(itemname, price, sh
     local Player = QBCore.Functions.GetPlayer(src)
     local shop = MySQL.prepare.await('SELECT stock FROM ownedshops WHERE shopname = ?', { shopname })
     local NewStock = {}
-    if table.type(inventory) ~= "empty" and shop then
+    if table.type(shop) ~= "empty" and shop then
         local items = json.decode(shop)
         if shop ~= '[]' then
             for slot, item in pairs(items) do
